@@ -1,3 +1,5 @@
+import React from 'react';
+
 import logoPath from '../images/vector.svg';
 
 function Header() {
