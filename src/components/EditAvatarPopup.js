@@ -11,6 +11,11 @@ function EditAvatarPopup(props) {
   const [isAvatarValid, setIsAvatarValid] = React.useState(true);
   const [isFormValid, setIsFormValid] = React.useState(false);
 
+  React.useEffect(() => {
+    resetButtonText();
+    resetInput();
+  }, [isOpen]);
+
   // Функции для изменения текста на кнопке отправки
   function changeButtonText() {
     setButtonText('Сохранение...');
@@ -39,16 +44,12 @@ function EditAvatarPopup(props) {
   // Обработчик отправки данных
   function handleSubmit(e) {
     e.preventDefault();
+    changeButtonText();
+    setIsFormValid(false);
 
     onUpdateAvatar({
       avatar: avatarRef.current.value
-    },
-    changeButtonText,
-    resetButtonText,
-    resetInput
-    );
-
-    setIsFormValid(false);
+    })
   }
 
   // Функция для закрытия окна

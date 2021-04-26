@@ -15,6 +15,11 @@ function AddPlacePopup(props) {
   const [buttonText, setButtonText] = React.useState('Создать');
   const [isFormValid, setIsFormValid] = React.useState(false);
 
+  React.useEffect(() => {
+    resetButtonText();
+    resetInput();
+  }, [isOpen]);
+
   // Функции для валидации полей формы
   function handleNameInput(e) {
     setIsNameValid(e.target.validity.valid);
@@ -63,17 +68,13 @@ function AddPlacePopup(props) {
   // Обработчик отправки данных
   function handleSubmit(e) {
     e.preventDefault();
+    changeButtonText();
+    setIsFormValid(false);
 
     onAddPlace({
       name: name,
       link: link
-    },
-    changeButtonText,
-    resetButtonText,
-    resetInput
-    );
-
-    setIsFormValid(false);
+    })
   }
 
   // Функция для закрытия окна

@@ -6,6 +6,10 @@ function ApproveDeleteCardPopup(props) {
   const { card, isOpen, onClose, onApproveDelition } = props;
   const [buttonText, setButtonText] = React.useState('Да');
 
+  React.useEffect(() => {
+    resetButtonText();
+  }, [isOpen]);
+
   // Функции для изменения текста на кнопке отправки
   function changeButtonText() {
     setButtonText('Удаление...');
@@ -18,8 +22,9 @@ function ApproveDeleteCardPopup(props) {
   // Обработчик отправки данных
   function handleSubmit(e) {
     e.preventDefault();
+    changeButtonText();
 
-    onApproveDelition(card, changeButtonText, resetButtonText);
+    onApproveDelition(card);
   }
 
   return (

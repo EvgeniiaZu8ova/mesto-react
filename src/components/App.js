@@ -25,22 +25,14 @@ function App() {
 
   // Загрузка на страницу данных пользователя и карточек с сервера при запуске приложения
   React.useEffect(() => {
-    api.getUserInfo()
-      .then((res) => {
-        setCurrentUser(res);
+    Promise.all([api.getUserInfo(), api.getInitialCards()])
+      .then(([userData, cards]) => {
+        setCurrentUser(userData);
+        setCards(cards);
       })
       .catch(err => {
-        console.log('Ошибка при загрузке данных пользователя', err.message);
-      });
-
-    api.getInitialCards()
-      .then((res) => {
-        setCards(res);
+        console.log('Ошибка при загрузке данных пользователя и карточек', err.message);
       })
-      .catch(err => {
-        console.log('Ошибка при загрузке карточек', err.message);
-      });
-
   },
   []);
 
@@ -87,12 +79,10 @@ function App() {
   }
 
   // Функции для обновления данных пользователя
-  function handleUpdateUser(data, changeButton, resetButton) {
-    changeButton();
+  function handleUpdateUser(data) {
     api.editUserInfo(data)
       .then((user) => {
         setCurrentUser(user);
-        resetButton();
         closeEditProfilePopup();
       })
       .catch(err => {
@@ -100,13 +90,10 @@ function App() {
       });
   }
 
-  function handleUpdateAvatar(data, changeButton, resetButton, resetInput) {
-    changeButton();
+  function handleUpdateAvatar(data) {
     api.changeUserAvatar(data)
       .then((user) => {
         setCurrentUser(user);
-        resetButton();
-        resetInput();
         closeEditAvatarPopup();
       })
       .catch(err => {
@@ -115,13 +102,10 @@ function App() {
   }
 
   // Функция для добавления новой карточки
-  function handleAddPlaceSubmit(card, changeButton, resetButton, resetInput) {
-    changeButton();
+  function handleAddPlaceSubmit(card) {
     api.addNewCard(card)
       .then((newCard) => {
         setCards([newCard, ...cards]);
-        resetButton();
-        resetInput();
         closeAddPlacePopup();
       })
       .catch(err => {
@@ -157,21 +141,15 @@ function App() {
   }
 
   // Функция для удаления карточки
-  function handleCardDelete(card, changeButton, resetButton) {
-    const isOwn = card.owner._id === currentUser._id;
-    if (isOwn) {
-      changeButton();
-      api.deleteCard(card._id)
-        .then(() => {
-          setCards((cards) => cards.filter((c) => c._id !== card._id));
-          resetButton();
-          closeApproveCardDeletePopup();
-        })
-        .catch(err => {
-          console.log('Ошибка при попытке удалить карточку', err.message);
-        });
-    }
-    return undefined;
+  function handleCardDelete(card) {
+    api.deleteCard(card._id)
+      .then(() => {
+        setCards((cards) => cards.filter((c) => c._id !== card._id));
+        closeApproveCardDeletePopup();
+      })
+      .catch(err => {
+        console.log('Ошибка при попытке удалить карточку', err.message);
+      }); 
   }
 
   return (

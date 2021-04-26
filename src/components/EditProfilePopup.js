@@ -23,6 +23,10 @@ function EditProfilePopup(props) {
     setDescription(currentUser.about);
   }, [currentUser]);
 
+  React.useEffect(() => {
+    resetButtonText();
+  }, [isOpen]);
+
   // Функции для валидации полей формы
   function handleNameInput(e) {
     setIsNameValid(e.target.validity.valid);
@@ -65,16 +69,13 @@ function EditProfilePopup(props) {
   // Обработчик отправки данных
   function handleSubmit(e) {
     e.preventDefault();
+    changeButtonText();
+    setIsFormValid(false);
 
     onUpdateUser({
       userName: name,
       userJob: description
-    },
-    changeButtonText,
-    resetButtonText
-    );
-
-    setIsFormValid(false);
+    })    
   }
 
   // Функция для закрытия окна
