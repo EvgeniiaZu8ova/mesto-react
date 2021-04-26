@@ -9,7 +9,7 @@
   border: none;
   background-color: transparent;
   transition: opacity 0.2s ease-in-out 0.2s;
-  visibility: visible;
+  visibility: hidden;
 }
 
 .article__delete-button:hover {
